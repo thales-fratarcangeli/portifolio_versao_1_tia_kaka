@@ -8,7 +8,7 @@ export const collections = {
       description: z.string(),
       pubDate: z.coerce.date(),
       coverImage: z.string().optional(),
-      category: z.enum(['pintura', 'arteterapia', 'tecnicas']),
+      category: z.enum(['pintura', 'tecnicas']),
       author: z.string().default('Klara Bosso — Tia Kaka'),
     }),
   }),

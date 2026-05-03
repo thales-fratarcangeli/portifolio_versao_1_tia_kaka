@@ -24,14 +24,6 @@ const services = [
     iconId: 'flower',
     waMessage: 'Ol%C3%A1%20Tia%20Kaka%2C%20tenho%20interesse%20nas%20aulas%20de%20Panos%20de%20Prato!',
   },
-  {
-    title: 'Arteterapia Infantil',
-    ages: 'Crianças 4 – 10',
-    description:
-      'Sessões lúdicas que combinam técnicas artísticas e desenvolvimento emocional. Criatividade, foco e autoestima.',
-    iconId: 'heart',
-    waMessage: 'Ol%C3%A1%20Tia%20Kaka%2C%20tenho%20interesse%20na%20Arteterapia%20Infantil!',
-  },
 ];
 
 const WA_BASE = 'https://wa.me/5516991468916?text=';
@@ -52,7 +44,7 @@ const WA_BASE = 'https://wa.me/5516991468916?text=';
       </p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {services.map((service, i) => (
         <article
           class="service-card glass-card p-7 flex flex-col group relative overflow-hidden"

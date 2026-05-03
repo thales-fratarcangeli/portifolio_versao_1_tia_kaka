@@ -1,13 +1,12 @@
 ---
 /* AJUSTAR: atualizar hora1rios e disponibilidade reais
-   Ateliê aberto de segunda a sexta das 8h às 18h e sábado pela manhã. */
+   Ateliê aberto de segunda a sexta, das 8h às 12h (manhã) e das 17h30 às 20h (noite). */
 const schedule = [
-  { day: 'Segunda', time: '08h – 10h', activity: 'Pintura em Tela',      ages: 'Adultos',              spots: 'Vagas disponíveis' },
-  { day: 'Terça',   time: '14h – 16h', activity: 'Arteterapia Infantil', ages: 'Crianças (4 – 10)',    spots: 'Últimas vagas' },
-  { day: 'Quarta',  time: '16h – 18h', activity: 'Desenho',              ages: 'Todas as idades',      spots: 'Vagas disponíveis' },
-  { day: 'Quinta',  time: '10h – 12h', activity: 'Panos de Prato',       ages: 'Adultos',              spots: 'Vagas disponíveis' },
-  { day: 'Sexta',   time: '14h – 16h', activity: 'Turma Livre',          ages: 'Todas as idades',      spots: 'Vagas disponíveis' },
-  { day: 'Sábado',  time: '09h – 12h', activity: 'Turma Aberta',         ages: 'Todas as idades',      spots: 'Últimas vagas' },
+  { day: 'Segunda', time: '08h – 10h',     activity: 'Pintura em Tela', ages: 'Adultos',         spots: 'Vagas disponíveis' },
+  { day: 'Terça',   time: '18h – 20h',     activity: 'Desenho',         ages: 'Todas as idades', spots: 'Últimas vagas' },
+  { day: 'Quarta',  time: '10h – 12h',     activity: 'Panos de Prato',  ages: 'Adultos',         spots: 'Vagas disponíveis' },
+  { day: 'Quinta',  time: '17h30 – 19h30', activity: 'Pintura em Tela', ages: 'Adultos',         spots: 'Vagas disponíveis' },
+  { day: 'Sexta',   time: '08h – 10h',     activity: 'Turma Livre',     ages: 'Todas as idades', spots: 'Vagas disponíveis' },
 ];
 
 const statusClass = (spots: string) => {
@@ -29,8 +28,9 @@ const WA_RESERVE =
         <span class="brush-underline italic" style="color: var(--color-terracota);">semana</span>
       </h2>
       <p class="section-lead mt-4">
-        Ateliê aberto de <strong>segunda a sexta das 8h às 18h</strong> e
-        <strong>sábado pela manhã</strong>. Inscrições abertas a qualquer momento —
+        Ateliê aberto de <strong>segunda a sexta</strong>, das
+        <strong>8h às 12h</strong> pela manhã e das
+        <strong>17h30 às 20h</strong> à noite. Inscrições abertas a qualquer momento —
         basta confirmar disponibilidade pelo WhatsApp.
       </p>
     </div>

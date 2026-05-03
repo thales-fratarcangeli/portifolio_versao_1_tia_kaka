@@ -29,3 +29,6 @@ pnpm-debug.log*
 
 # other
 *.log
+
+# versao "antes" usada so localmente p/ comparacao
+antes.html

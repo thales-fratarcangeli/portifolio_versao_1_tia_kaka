@@ -11,7 +11,7 @@ export interface Props {
 
 const {
   title = 'Tia Kaka · Klara Bosso — Aulas de Arte em São Joaquim da Barra',
-  description = 'Aulas de pintura em tela, desenho, panos de prato e arteterapia infantil com Klara Bosso ("Tia Kaka"). Arte que transforma em São Joaquim da Barra - SP.',
+  description = 'Aulas de pintura em tela, desenho artístico e panos de prato com Klara Bosso ("Tia Kaka"). Arte que transforma em São Joaquim da Barra - SP.',
   image = '/og-image.svg',
   noIndex = false,
 } = Astro.props;
@@ -94,13 +94,13 @@ const year = new Date().getFullYear();
               '@type': 'OpeningHoursSpecification',
               dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
               opens: '08:00',
-              closes: '18:00',
+              closes: '12:00',
             },
             {
               '@type': 'OpeningHoursSpecification',
-              dayOfWeek: 'Saturday',
-              opens: '08:00',
-              closes: '12:00',
+              dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+              opens: '17:30',
+              closes: '20:00',
             },
           ],
           sameAs: [
@@ -116,7 +116,7 @@ const year = new Date().getFullYear();
           jobTitle: 'Professora de Artes Plásticas',
           image: ogImage,
           worksFor: { '@id': `${Astro.site}#business` },
-          knowsAbout: ['Pintura em tela', 'Desenho artístico', 'Arteterapia infantil', 'Pintura em tecido'],
+          knowsAbout: ['Pintura em tela', 'Desenho artístico', 'Pintura em tecido'],
           address: {
             '@type': 'PostalAddress',
             addressLocality: 'São Joaquim da Barra',

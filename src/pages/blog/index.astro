@@ -13,7 +13,6 @@ const posts = (await getCollection('blog')).sort(
 
 const categoryLabel: Record<string, string> = {
   pintura: 'Pintura',
-  arteterapia: 'Arteterapia',
   tecnicas: 'Técnicas',
 };
 
@@ -23,7 +22,7 @@ const fmt = (d: Date) =>
 
 <BaseLayout
   title="Blog · Tia Kaka"
-  description="Reflexões, dicas e histórias do ateliê da Tia Kaka sobre pintura, desenho, arteterapia e panos de prato."
+  description="Reflexões, dicas e histórias do ateliê da Tia Kaka sobre pintura em tela, desenho artístico e panos de prato."
 >
   <Header />
 
