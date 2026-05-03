@@ -1,0 +1,101 @@
+---
+const stats = [
+  { target: 8, suffix: '+', label: 'Anos ensinando' },
+  { target: 200, suffix: '+', label: 'Alunos formados' },
+  { target: 4, suffix: '', label: 'Modalidades de arte' },
+  { target: 100, suffix: '%', label: 'Aulas personalizadas' },
+];
+---
+
+<section
+  id="stats"
+  class="relative overflow-hidden py-20 md:py-24 noise"
+  style="background: var(--color-terracota); color: var(--color-cream);"
+  aria-labelledby="stats-title"
+>
+  <!-- SVG decorativo de pinceladas largas -->
+  <svg
+    class="absolute top-0 left-0 w-full h-full opacity-15 pointer-events-none"
+    viewBox="0 0 1200 400"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path d="M0 80 Q 300 20 600 80 T 1200 80" stroke="#FAF6F0" stroke-width="36" fill="none" stroke-linecap="round"/>
+    <path d="M0 320 Q 300 260 600 320 T 1200 320" stroke="#FAF6F0" stroke-width="30" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container-wide relative z-10">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <p class="section-kicker" style="color: rgba(250,246,240,0.8);">Números que contam histórias</p>
+      <h2 id="stats-title" class="font-display text-4xl md:text-5xl font-bold text-balance" style="color: var(--color-cream);">
+        Cada traço deixou marca
+      </h2>
+    </div>
+
+    <div
+      class="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 text-center"
+      id="stats-grid"
+    >
+      {stats.map((stat) => (
+        <div class="stat-item">
+          <span
+            class="stat-counter block font-display text-5xl md:text-6xl lg:text-7xl font-black leading-none mb-2"
+            data-target={stat.target}
+            data-suffix={stat.suffix}
+            aria-live="polite"
+          >
+            0{stat.suffix}
+          </span>
+          <p class="text-sm md:text-base font-semibold tracking-wide" style="color: rgba(250,246,240,0.9);">
+            {stat.label}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stat-counter {
+    text-shadow: 0 4px 16px rgba(44, 36, 22, 0.18);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const counters = document.querySelectorAll<HTMLElement>('.stat-counter');
+
+  function animateCounter(el: HTMLElement, target: number, duration = 2000) {
+    const suffix = el.dataset.suffix || '';
+    if (reduceMotion) {
+      el.textContent = target + suffix;
+      return;
+    }
+    const start = performance.now();
+    const update = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+      else el.textContent = target + suffix;
+    };
+    requestAnimationFrame(update);
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          const target = parseInt(el.dataset.target || '0', 10);
+          animateCounter(el, target, 2000);
+          observer.unobserve(el);
+        }
+      });
+    },
+    { threshold: 0.2 },
+  );
+
+  counters.forEach((c) => observer.observe(c));
+</script>

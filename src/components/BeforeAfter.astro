@@ -1,0 +1,153 @@
+---
+---
+
+<section id="processo" class="section" style="background: var(--color-cream);">
+  <div class="container-wide">
+    <div class="max-w-2xl mb-12">
+      <p class="section-kicker">Processo criativo</p>
+      <h2 class="section-title text-balance">
+        Do
+        <span class="brush-underline italic" style="color: var(--color-terracota);">branco</span>
+        à obra
+      </h2>
+      <p class="section-lead mt-4">
+        Toda pintura começa com uma tela vazia e um pouco de coragem.
+        Arraste o controle para ver como uma ideia simples se transforma em arte.
+      </p>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <div
+        id="ba-container"
+        class="relative w-full overflow-hidden rounded-3xl shadow-organic select-none touch-none"
+        style="aspect-ratio: 4 / 3; background: var(--color-areia);"
+        role="img"
+        aria-label="Comparador antes e depois. Arraste o controle horizontal para comparar."
+        tabindex="0"
+      >
+        <!-- BEFORE: fica por baixo (visível fora da área clipada) -->
+        <div class="absolute inset-0" id="ba-before" aria-hidden="true">
+          <!-- SUBSTITUIR: imagem ANTES (tela em branco / esboço inicial) -->
+          <div class="img-placeholder w-full h-full" style="border-radius: 0;">
+            <div class="text-center px-6">
+              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="color: var(--color-tinta); opacity:.4; margin: 0 auto 10px;" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="3" y1="12" x2="21" y2="12" stroke-dasharray="2,3"/>
+              </svg>
+              <p style="font-size:.8rem; opacity:.7; color: var(--color-tinta);">ANTES — Tela em branco</p>
+              <p style="font-size:.65rem; opacity:.4;">SUBSTITUIR · /images/before-placeholder.jpg</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- AFTER: fica por cima, clipado -->
+        <div
+          class="absolute inset-0"
+          id="ba-after"
+          aria-hidden="true"
+          style="clip-path: inset(0 50% 0 0);"
+        >
+          <!-- SUBSTITUIR: imagem DEPOIS (obra finalizada) -->
+          <div
+            class="w-full h-full"
+            style="background:
+              linear-gradient(135deg, var(--color-terracota) 0%, var(--color-ocre) 45%, var(--color-verde-oliva) 100%);
+              background-image:
+                radial-gradient(circle at 25% 35%, rgba(250,246,240,0.45) 0, transparent 40%),
+                radial-gradient(circle at 70% 65%, rgba(44,36,22,0.3) 0, transparent 55%),
+                linear-gradient(135deg, var(--color-terracota) 0%, var(--color-ocre) 45%, var(--color-verde-oliva) 100%);
+              display:flex; align-items:flex-end; justify-content:flex-end; padding: 20px;"
+          >
+            <div style="background: rgba(250,246,240,0.85); padding: 8px 14px; border-radius: 8px 4px 10px 2px; font-family: 'Playfair Display', serif; font-style: italic; color: var(--color-tinta); font-size: .9rem;">
+              DEPOIS — Obra finalizada
+              <br/><span style="font-size: .6rem; opacity:.6;">SUBSTITUIR · after-placeholder.jpg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Handle -->
+        <div
+          id="ba-handle"
+          class="absolute top-0 bottom-0 pointer-events-none"
+          style="left: 50%; transform: translateX(-50%); width: 4px; background: var(--color-cream); box-shadow: 0 0 0 1px rgba(44,36,22,0.4), 0 0 20px rgba(44,36,22,0.4);"
+        >
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full grid place-items-center pointer-events-auto cursor-ew-resize"
+            style="background: var(--color-cream); color: var(--color-tinta); box-shadow: 0 6px 20px rgba(44,36,22,0.35); border: 2px solid var(--color-terracota);"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m8 3-5 5 5 5M3 8h18M16 21l5-5-5-5M21 16H3"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Labels -->
+        <span
+          class="absolute top-4 left-4 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full pointer-events-none"
+          style="background: rgba(44,36,22,0.75); color: var(--color-cream);"
+          aria-hidden="true"
+        >Antes</span>
+        <span
+          class="absolute top-4 right-4 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full pointer-events-none"
+          style="background: rgba(193,105,79,0.9); color: var(--color-cream);"
+          aria-hidden="true"
+        >Depois</span>
+      </div>
+
+      <p class="text-center text-sm mt-5" style="color: rgba(44,36,22,0.6);">
+        Arraste o controle ou use as setas ← → do teclado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const container = document.getElementById('ba-container') as HTMLElement;
+  const afterEl = document.getElementById('ba-after') as HTMLElement;
+  const handle = document.getElementById('ba-handle') as HTMLElement;
+  if (!container || !afterEl || !handle) throw new Error('BeforeAfter components missing');
+
+  let pos = 50;
+  let dragging = false;
+
+  function setPos(value: number) {
+    pos = Math.max(0, Math.min(100, value));
+    afterEl.style.clipPath = `inset(0 ${100 - pos}% 0 0)`;
+    handle.style.left = `${pos}%`;
+    container.setAttribute('aria-valuenow', String(Math.round(pos)));
+  }
+
+  function posFromClient(clientX: number) {
+    const rect = container.getBoundingClientRect();
+    return ((clientX - rect.left) / rect.width) * 100;
+  }
+
+  function onPointerDown(clientX: number) {
+    dragging = true;
+    setPos(posFromClient(clientX));
+  }
+  function onPointerMove(clientX: number) {
+    if (!dragging) return;
+    setPos(posFromClient(clientX));
+  }
+  function onPointerUp() {
+    dragging = false;
+  }
+
+  container.addEventListener('mousedown', (e) => { e.preventDefault(); onPointerDown(e.clientX); });
+  window.addEventListener('mousemove', (e) => onPointerMove(e.clientX));
+  window.addEventListener('mouseup', onPointerUp);
+
+  container.addEventListener('touchstart', (e) => { onPointerDown(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('touchmove', (e) => onPointerMove(e.touches[0].clientX), { passive: true });
+  window.addEventListener('touchend', onPointerUp);
+
+  container.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); setPos(pos - 4); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); setPos(pos + 4); }
+    if (e.key === 'Home') { e.preventDefault(); setPos(0); }
+    if (e.key === 'End') { e.preventDefault(); setPos(100); }
+  });
+
+  setPos(50);
+</script>

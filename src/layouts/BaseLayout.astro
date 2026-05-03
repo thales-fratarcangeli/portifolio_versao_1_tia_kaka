@@ -1,0 +1,156 @@
+---
+import '@styles/globals.css';
+import CustomCursor from '@components/CustomCursor.astro';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title = 'Tia Kaka · Klara Bosso — Aulas de Arte em São Joaquim da Barra',
+  description = 'Aulas de pintura em tela, desenho, panos de prato e arteterapia infantil com Klara Bosso ("Tia Kaka"). Arte que transforma em São Joaquim da Barra - SP.',
+  image = '/og-image.svg',
+  noIndex = false,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = new URL(base + image, Astro.site).toString();
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#C1694F" />
+    <meta name="color-scheme" content="light" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="apple-touch-icon" href={`${base}/favicon.svg`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Tia Kaka · Arte que transforma" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Nunito:wght@300;400;500;600;700;800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Nunito:wght@300;400;500;600;700;800&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'LocalBusiness',
+          '@id': `${Astro.site}#business`,
+          name: 'Tia Kaka · Aulas de Arte',
+          alternateName: 'Borboletas em Desenvolvimento',
+          description,
+          image: ogImage,
+          url: canonicalURL,
+          telephone: '+55-16-99146-8916',
+          priceRange: '$$',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Rua Rio Grande do Norte, 1619',
+            addressLocality: 'São Joaquim da Barra',
+            addressRegion: 'SP',
+            postalCode: '14600-000',
+            addressCountry: 'BR',
+          },
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: -20.5805,
+            longitude: -47.8556,
+          },
+          openingHoursSpecification: [
+            { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Wednesday'], opens: '09:00', closes: '11:00' },
+            { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Tuesday', opens: '14:00', closes: '16:00' },
+            { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Thursday', opens: '19:00', closes: '21:00' },
+            { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '09:00', closes: '12:00' },
+          ],
+          sameAs: [
+            'https://www.instagram.com/borboletasemdesenvolvimento/',
+            'https://wa.me/5516991468916',
+          ],
+        },
+        {
+          '@type': 'Person',
+          '@id': `${Astro.site}#klara`,
+          name: 'Klara Bosso',
+          alternateName: 'Tia Kaka',
+          jobTitle: 'Professora de Artes Plásticas',
+          image: ogImage,
+          worksFor: { '@id': `${Astro.site}#business` },
+          knowsAbout: ['Pintura em tela', 'Desenho artístico', 'Arteterapia infantil', 'Pintura em tecido'],
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'São Joaquim da Barra',
+            addressRegion: 'SP',
+            addressCountry: 'BR',
+          },
+        },
+      ],
+    })} />
+
+    <script is:inline>
+      // Detecta prefers-reduced-motion cedo para evitar flashes
+      if (typeof window !== 'undefined') {
+        try {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('reduce-motion');
+          }
+        } catch (_) {}
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+    <CustomCursor />
+    <slot />
+
+    <script>
+      // Smooth scroll fallback para navegadores que não suportam scroll-behavior smooth em âncoras via JS
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (!href || href === '#') return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.replaceState(null, '', href);
+          }
+        });
+      });
+    </script>
+
+    <!-- Footer copyright server time cached year: {year} -->
+  </body>
+</html>

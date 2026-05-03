@@ -1,0 +1,196 @@
+
+```
+## Objetivo
+Construa uma landing page/portfólio profissional para Klara Bosso ("Tia Kaka"),
+professora de artes plásticas. O site deve ser visualmente sofisticado, artesanal
+e humano — sem absolutamente nenhum estética genérica de IA.
+
+---
+
+## Stack Técnica
+
+- **Framework**: Astro 4.x (SSG, zero-JS por padrão, ideal para GitHub Pages)
+- **Estilização**: Tailwind CSS v3 + plugin @tailwindcss/typography
+- **Animações**: Motion One (Web Animations API nativa) + ScrollTimeline API
+  com fallback via IntersectionObserver
+- **Fontes**: Google Fonts com `font-display: swap`
+  - Display: "Playfair Display" (elegância artística)
+  - Body: "Nunito" (acolhedor, legível)
+- **Ícones**: Lucide Icons (tree-shakeable, SVG inline)
+- **Deploy**: GitHub Pages via `@astrojs/adapter-static` + GitHub Actions
+  (workflow `deploy.yml` com `actions/deploy-pages@v3`)
+
+---
+
+## Estrutura de Arquivos
+
+```
+/
+├── public/
+│   ├── favicon.svg
+│   └── og-image.jpg
+├── src/
+│   ├── components/
+│   │   ├── Hero.astro
+│   │   ├── About.astro
+│   │   ├── Services.astro
+│   │   ├── Gallery.astro
+│   │   ├── Testimonials.astro
+│   │   ├── Contact.astro
+│   │   └── Footer.astro
+│   ├── layouts/
+│   │   └── BaseLayout.astro
+│   └── pages/
+│       └── index.astro
+├── astro.config.mjs   ← site: 'https://<usuario>.github.io', base: '/<repo>'
+└── .github/workflows/deploy.yml
+```
+
+---
+
+## Identidade Visual
+
+**Paleta de cores** (definir como CSS custom properties em :root):
+- `--color-cream`: #FAF6F0 (fundo principal)
+- `--color-terracota`: #C1694F (acento quente, botões CTA)
+- `--color-verde-oliva`: #7A8C5E (acento secundário)
+- `--color-tinta`: #2C2416 (texto principal)
+- `--color-areia`: #E8DDD0 (cards, divisores)
+
+**Estética**: orgânica, artesanal, com textura de tela de pintura no hero
+(SVG noise filter ou CSS `background-image: url("data:image/svg+xml,...")`).
+Formas irregulares, blobs e bordas levemente imperfeitas nos cards.
+Nada de cantos perfeitamente retos em elementos decorativos.
+
+---
+
+## Seções e Requisitos
+
+### 1. Header / Nav
+- Logo tipográfico "Tia Kaka" + tagline "Arte que transforma"
+- Nav com smooth scroll para âncoras (#sobre, #atividades, #galeria, #contato)
+- Sticky com backdrop-blur ao scrollar
+- Hamburger menu mobile com animação de morphing (lines → X)
+
+### 2. Hero
+- Layout full-viewport com texto sobreposto a uma imagem/ilustração
+- Headline: "Desperte o artista que vive em você"
+- Sub: "Aulas de pintura e desenho para todas as idades em São Joaquim da Barra"
+- CTA primário → WhatsApp (`https://wa.me/5516991468916?text=Olá%2C%20Tia%20Kaka!`)
+- CTA secundário → scroll para #atividades
+- Texto animado com staggered reveal (Motion One, `animate()` com `delay`)
+- Elemento decorativo: pinceladas SVG animadas no fundo
+
+### 3. Sobre / About
+- Foto da Klara + bio em prosa
+- Destaques com ícones: anos de experiência, faixas etárias, modalidades
+- Pill badges: "Pintura em Tela", "Panos de Prato", "Arteterapia Infantil"
+
+### 4. Atividades / Serviços
+- Grid de cards com glassmorphism suave (backdrop-filter: blur)
+- Cards:
+  1. **Pintura em Tela** — técnicas variadas, do iniciante ao avançado
+  2. **Desenho Artístico** — fundamentos e estilo livre
+  3. **Panos de Prato** — pintura decorativa em tecido
+  4. **Arteterapia Infantil** — desenvolvimento criativo e emocional
+- Cada card: ícone SVG inline, título, descrição curta, faixa etária
+- Hover: elevação com box-shadow + leve rotate3d (CSS transform)
+
+### 5. Galeria
+- Masonry grid CSS (columns: 2/3 col, gap responsivo)
+- Lazy loading nativo (`loading="lazy"`) + aspect-ratio fixo por placeholder
+- Lightbox puro em JS vanilla (sem dependências) ao clicar
+- Placeholder images de qualidade com `object-fit: cover`
+
+### 6. Depoimentos
+- Carousel/slider com scroll-snap CSS (sem biblioteca)
+- Auto-play pausado em hover/focus (acessibilidade)
+- Indicadores de navegação customizados
+
+### 7. Localização & Contato
+- Embed Google Maps iframe: Rua Rio Grande do Norte, 1619,
+  São Joaquim da Barra - SP, 14600-000
+- Cards de contato:
+  - WhatsApp: +55 16 99146-8916
+    link: `https://wa.me/5516991468916`
+  - Instagram: @borboletasemdesenvolvimento
+    link: `https://www.instagram.com/borboletasemdesenvolvimento/`
+  - Endereço completo com ícone de pin
+- Botão flutuante de WhatsApp no canto inferior direito (fixo, z-50)
+  com pulse animation em CSS
+
+### 8. Footer
+- Logo + tagline
+- Links rápidos + redes sociais
+- "© 2025 Klara Bosso · Feito com 🎨 em São Joaquim da Barra"
+
+---
+
+## Responsividade
+
+- Mobile-first: breakpoints sm(640) / md(768) / lg(1024) / xl(1280)
+- Touch targets mínimos de 44×44px (WCAG 2.1 AA)
+- Imagens com `srcset` + `sizes` para otimização por viewport
+- Testar em 320px, 375px, 768px, 1024px, 1440px
+
+---
+
+## Performance & SEO
+
+- `<meta>` completo: title, description, OG tags, Twitter Card
+- Schema.org JSON-LD do tipo `LocalBusiness` + `Person` inline no `<head>`
+- `sitemap.xml` via `@astrojs/sitemap`
+- `robots.txt` permissivo
+- Core Web Vitals: LCP < 2.5s, CLS < 0.1, INP < 200ms
+- Preload das fontes críticas com `<link rel="preload">`
+
+---
+
+## Acessibilidade
+
+- Semântica HTML5 correta (main, section, article, nav, aside)
+- `aria-label` em todos os botões sem texto visível
+- Skip-to-content link oculto visível no focus
+- Contraste mínimo 4.5:1 para texto (WCAG AA)
+- `prefers-reduced-motion`: desativar animações quando solicitado
+  ```css
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  ```
+- Focus visible customizado (outline offset, não remover)
+
+---
+
+## GitHub Pages — Deploy
+
+`astro.config.mjs`:
+```js
+import { defineConfig } from 'astro/config';
+export default defineConfig({
+  site: 'https://<SEU_USUARIO>.github.io',
+  base: '/<NOME_DO_REPO>',
+  output: 'static',
+});
+```
+
+`.github/workflows/deploy.yml`:
+- trigger: `push` na branch `main`
+- steps: `actions/checkout@v4` → `actions/setup-node@v4` (node 20) →
+  `npm ci` → `npm run build` → `actions/upload-pages-artifact@v3` →
+  `actions/deploy-pages@v3`
+- permissions: `pages: write`, `id-token: write`
+
+---
+
+## Restrições de Design (OBRIGATÓRIO)
+
+- ❌ Sem gradientes roxos/azuis genéricos
+- ❌ Sem Inter, Roboto ou fontes de sistema como escolha display
+- ❌ Sem cards perfeitos e simétricos demais
+- ❌ Sem ícones de emoji como decoração principal
+- ✅ Texturas sutis, pinceladas, formas orgânicas
+- ✅ Tipografia expressiva com hierarquia clara
+- ✅ Paleta terrosa/quente coerente do início ao fim
+- ✅ Cada seção deve ter um detalhe visual memorável e único
+```
+
+---

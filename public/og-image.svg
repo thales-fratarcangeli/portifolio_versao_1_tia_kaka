@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FAF6F0"/>
+      <stop offset="1" stop-color="#E8DDD0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.2" cy="0.3" r="0.6">
+      <stop offset="0" stop-color="#C1694F" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#C1694F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <path d="M80 400 C 260 220, 460 200, 640 340 S 900 500, 1100 380" stroke="#C1694F" stroke-width="22" stroke-linecap="round" fill="none" opacity="0.55"/>
+  <path d="M100 540 Q 350 480, 600 540 T 1120 540" stroke="#7A8C5E" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <circle cx="140" cy="140" r="60" fill="#C1694F"/>
+  <text x="140" y="170" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="80" font-weight="900" font-style="italic" fill="#FAF6F0">K</text>
+
+  <text x="240" y="140" font-family="Playfair Display, Georgia, serif" font-size="72" font-weight="700" fill="#2C2416">Tia Kaka</text>
+  <text x="240" y="180" font-family="Nunito, sans-serif" font-size="22" font-weight="700" fill="#C1694F" letter-spacing="4">ARTE QUE TRANSFORMA</text>
+
+  <text x="140" y="320" font-family="Playfair Display, Georgia, serif" font-size="84" font-weight="700" fill="#2C2416">Desperte o artista</text>
+  <text x="140" y="400" font-family="Playfair Display, Georgia, serif" font-size="84" font-weight="700" fill="#2C2416">que vive em você</text>
+
+  <text x="140" y="475" font-family="Nunito, sans-serif" font-size="26" fill="#2C2416" opacity="0.75">Aulas de pintura, desenho e arteterapia</text>
+  <text x="140" y="510" font-family="Nunito, sans-serif" font-size="26" fill="#2C2416" opacity="0.75">São Joaquim da Barra - SP</text>
+
+  <rect x="140" y="555" width="260" height="54" rx="27" fill="#C1694F"/>
+  <text x="270" y="590" text-anchor="middle" font-family="Nunito, sans-serif" font-size="22" font-weight="700" fill="#FAF6F0">Agendar uma aula</text>
+</svg>

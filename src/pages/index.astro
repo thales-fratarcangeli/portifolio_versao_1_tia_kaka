@@ -1,0 +1,36 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/Header.astro';
+import Hero from '@components/Hero.astro';
+import About from '@components/About.astro';
+import Services from '@components/Services.astro';
+import Stats from '@components/Stats.astro';
+import Gallery from '@components/Gallery.astro';
+import BeforeAfter from '@components/BeforeAfter.astro';
+import Schedule from '@components/Schedule.astro';
+import Testimonials from '@components/Testimonials.astro';
+import Timeline from '@components/Timeline.astro';
+import FAQ from '@components/FAQ.astro';
+import Contact from '@components/Contact.astro';
+import Footer from '@components/Footer.astro';
+import WhatsAppFloat from '@components/WhatsAppFloat.astro';
+---
+
+<BaseLayout>
+  <Header />
+  <main id="main">
+    <Hero />
+    <About />
+    <Services />
+    <Stats />
+    <Gallery />
+    <BeforeAfter />
+    <Schedule />
+    <Testimonials />
+    <Timeline />
+    <FAQ />
+    <Contact />
+  </main>
+  <Footer />
+  <WhatsAppFloat />
+</BaseLayout>

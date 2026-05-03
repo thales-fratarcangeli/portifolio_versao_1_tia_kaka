@@ -1,0 +1,26 @@
+{
+  "name": "tia-kaka-site",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfólio de Klara Bosso (Tia Kaka) - Professora de Artes Plásticas",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.2.0",
+    "@astrojs/tailwind": "^5.1.5",
+    "@tailwindcss/typography": "^0.5.15",
+    "astro": "^4.16.18",
+    "motion": "^10.18.0",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

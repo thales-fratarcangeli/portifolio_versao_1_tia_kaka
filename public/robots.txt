@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thales-fratarcangeli.github.io/portifolio_versao_1_tia_kaka/sitemap-index.xml

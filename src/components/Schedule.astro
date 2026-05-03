@@ -1,0 +1,111 @@
+---
+/* AJUSTAR: atualizar horários e disponibilidade reais */
+const schedule = [
+  { day: 'Segunda', time: '09h – 11h', activity: 'Pintura em Tela',     ages: 'Adultos',              spots: 'Vagas disponíveis' },
+  { day: 'Terça',   time: '14h – 16h', activity: 'Arteterapia Infantil', ages: 'Crianças (4 – 10)',    spots: 'Últimas vagas' },
+  { day: 'Quarta',  time: '09h – 11h', activity: 'Desenho',              ages: 'Todas as idades',      spots: 'Vagas disponíveis' },
+  { day: 'Quinta',  time: '19h – 21h', activity: 'Panos de Prato',       ages: 'Adultos',              spots: 'Vagas disponíveis' },
+  { day: 'Sábado',  time: '09h – 12h', activity: 'Turma Livre',          ages: 'Todas as idades',      spots: 'Esgotado' },
+];
+
+const statusClass = (spots: string) => {
+  if (spots === 'Vagas disponíveis') return 'status-available';
+  if (spots === 'Últimas vagas') return 'status-last';
+  return 'status-full';
+};
+
+const WA_RESERVE =
+  'https://wa.me/5516991468916?text=Ol%C3%A1%20Tia%20Kaka%2C%20quero%20reservar%20uma%20vaga!';
+---
+
+<section id="turmas" class="section" style="background: var(--color-areia);">
+  <div class="container-wide">
+    <div class="max-w-2xl mb-12">
+      <p class="section-kicker">Turmas abertas</p>
+      <h2 class="section-title text-balance">
+        Agenda da
+        <span class="brush-underline italic" style="color: var(--color-terracota);">semana</span>
+      </h2>
+      <p class="section-lead mt-4">
+        Horários fixos durante o ano letivo. Inscrições abertas a qualquer momento —
+        basta confirmar disponibilidade pelo WhatsApp.
+      </p>
+    </div>
+
+    <div
+      role="table"
+      aria-label="Calendário semanal de turmas"
+      class="overflow-hidden rounded-2xl shadow-organic bg-[color:var(--color-cream)]"
+    >
+      <div
+        role="row"
+        class="hidden md:grid grid-cols-[1fr_1fr_1.5fr_1.3fr_1.3fr] gap-4 px-6 py-4 font-display font-bold text-sm uppercase tracking-widest"
+        style="background: var(--color-tinta); color: var(--color-cream);"
+      >
+        <span role="columnheader">Dia</span>
+        <span role="columnheader">Horário</span>
+        <span role="columnheader">Atividade</span>
+        <span role="columnheader">Faixa</span>
+        <span role="columnheader">Status</span>
+      </div>
+
+      {schedule.map((row, i) => (
+        <div
+          role="row"
+          class="schedule-row grid md:grid-cols-[1fr_1fr_1.5fr_1.3fr_1.3fr] gap-3 md:gap-4 px-5 md:px-6 py-5 items-center"
+          style={i % 2 === 0 ? 'background: transparent;' : 'background: rgba(232,221,208,0.55);'}
+        >
+          <div role="cell">
+            <span class="md:hidden text-[0.65rem] uppercase tracking-widest font-bold opacity-60">Dia</span>
+            <p class="font-display text-lg font-bold" style="color: var(--color-tinta);">{row.day}</p>
+          </div>
+          <div role="cell">
+            <span class="md:hidden text-[0.65rem] uppercase tracking-widest font-bold opacity-60">Horário</span>
+            <p class="font-semibold" style="color: var(--color-terracota);">{row.time}</p>
+          </div>
+          <div role="cell">
+            <span class="md:hidden text-[0.65rem] uppercase tracking-widest font-bold opacity-60">Atividade</span>
+            <p class="font-semibold" style="color: var(--color-tinta);">{row.activity}</p>
+          </div>
+          <div role="cell">
+            <span class="md:hidden text-[0.65rem] uppercase tracking-widest font-bold opacity-60">Faixa etária</span>
+            <p class="text-sm" style="color: rgba(44,36,22,0.7);">{row.ages}</p>
+          </div>
+          <div role="cell">
+            <span class={`badge-status ${statusClass(row.spots)}`}>{row.spots}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center mt-10">
+      <a
+        href={WA_RESERVE}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-primary text-base md:text-lg px-8 py-4"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Reservar minha vaga
+      </a>
+      <p class="text-xs mt-3" style="color: rgba(44,36,22,0.6);">
+        Aulas individuais e horários alternativos sob consulta.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .schedule-row {
+    grid-template-columns: 1fr;
+    border-bottom: 1px solid rgba(44,36,22,0.06);
+  }
+  .schedule-row:last-child { border-bottom: none; }
+  @media (min-width: 768px) {
+    .schedule-row {
+      grid-template-columns: 1fr 1fr 1.5fr 1.3fr 1.3fr;
+    }
+  }
+</style>

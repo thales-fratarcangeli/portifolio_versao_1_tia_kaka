@@ -1,0 +1,145 @@
+---
+/* AJUSTAR: preencher com eventos, exposições e marcos reais */
+const events = [
+  { year: '2017', title: 'Início das aulas',           description: 'Primeiras turmas em São Joaquim da Barra, começando com pintura em tela no próprio ateliê.' },
+  { year: '2019', title: 'Expansão para arteterapia',  description: 'Início das sessões terapêuticas para crianças, combinando arte e desenvolvimento emocional.' },
+  { year: '2021', title: '100 alunos formados',        description: 'Marco de centenas de vidas tocadas pela arte — muitos alunos começaram jovens e seguem até hoje.' },
+  { year: '2023', title: 'Novas modalidades',          description: 'Introdução das aulas de panos de prato decorativos, trazendo uma tradição brasileira para o ateliê.' },
+  { year: '2025', title: 'Borboletas ganha presença digital', description: 'Lançamento do site oficial e expansão da presença nas redes como @borboletasemdesenvolvimento.' },
+];
+---
+
+<section id="timeline" class="section" style="background: var(--color-cream);">
+  <div class="container-wide">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <p class="section-kicker">Uma trajetória</p>
+      <h2 class="section-title text-balance">
+        Marcos do
+        <span class="brush-underline italic" style="color: var(--color-terracota);">ateliê</span>
+      </h2>
+      <p class="section-lead mx-auto mt-4">
+        Alguns dos momentos que pintaram essa jornada até aqui.
+      </p>
+    </div>
+
+    <div class="relative timeline-wrap max-w-4xl mx-auto">
+      <div class="timeline-line" aria-hidden="true"></div>
+
+      <ol class="space-y-10 md:space-y-14">
+        {events.map((ev, i) => (
+          <li
+            class="timeline-item relative md:grid md:grid-cols-[1fr_auto_1fr] md:gap-6 items-start reveal-hidden"
+            data-side={i % 2 === 0 ? 'left' : 'right'}
+          >
+            <div class={`hidden md:block ${i % 2 === 0 ? '' : 'md:order-3'}`}>
+              {i % 2 === 0 && (
+                <div class="timeline-card md:text-right md:pr-4">
+                  <p class="font-display text-3xl font-black" style="color: var(--color-terracota);">{ev.year}</p>
+                  <h3 class="font-display text-xl font-bold mt-1" style="color: var(--color-tinta);">{ev.title}</h3>
+                  <p class="text-base mt-2" style="color: rgba(44,36,22,0.75);">{ev.description}</p>
+                </div>
+              )}
+            </div>
+
+            <div class="timeline-dot-col hidden md:flex flex-col items-center">
+              <span class="timeline-dot" aria-hidden="true"></span>
+            </div>
+
+            <div class={`${i % 2 !== 0 ? '' : 'md:order-3'}`}>
+              {i % 2 !== 0 && (
+                <div class="timeline-card md:pl-4">
+                  <p class="font-display text-3xl font-black" style="color: var(--color-terracota);">{ev.year}</p>
+                  <h3 class="font-display text-xl font-bold mt-1" style="color: var(--color-tinta);">{ev.title}</h3>
+                  <p class="text-base mt-2" style="color: rgba(44,36,22,0.75);">{ev.description}</p>
+                </div>
+              )}
+            </div>
+
+            <div class="md:hidden relative pl-10">
+              <span class="absolute left-0 top-2 timeline-dot" aria-hidden="true"></span>
+              <p class="font-display text-3xl font-black" style="color: var(--color-terracota);">{ev.year}</p>
+              <h3 class="font-display text-xl font-bold mt-1" style="color: var(--color-tinta);">{ev.title}</h3>
+              <p class="text-base mt-2" style="color: rgba(44,36,22,0.75);">{ev.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline-wrap { padding-left: 0; }
+  .timeline-line {
+    position: absolute;
+    left: 4px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent 0%, var(--color-terracota) 12%, var(--color-terracota) 88%, transparent 100%);
+  }
+
+  .timeline-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-terracota);
+    box-shadow: 0 0 0 4px var(--color-cream), 0 0 0 5.5px var(--color-terracota);
+  }
+
+  .timeline-dot-col {
+    width: 20px;
+    align-self: flex-start;
+    padding-top: 10px;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-line {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .timeline-card {
+    padding: 1.25rem 1.5rem;
+    background: rgba(250,246,240,0.9);
+    border: 1px solid var(--color-areia-dark);
+    border-radius: 20px 14px 22px 16px / 18px 20px 18px 22px;
+    box-shadow: 0 8px 24px -14px rgba(44,36,22,0.18);
+  }
+</style>
+
+<script>
+  import { animate } from 'motion';
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const items = document.querySelectorAll<HTMLElement>('.timeline-item');
+
+  if (reduceMotion) {
+    items.forEach((it) => {
+      it.style.opacity = '1';
+      it.style.transform = 'none';
+    });
+  } else {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const side = el.dataset.side;
+            const fromX = side === 'left' ? -32 : 32;
+            animate(
+              el,
+              { opacity: [0, 1], transform: [`translateX(${fromX}px)`, 'translateX(0)'] },
+              { duration: 0.8, easing: [0.22, 1, 0.36, 1] },
+            );
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.18 },
+    );
+    items.forEach((it) => observer.observe(it));
+  }
+</script>

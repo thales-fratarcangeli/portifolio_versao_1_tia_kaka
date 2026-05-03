@@ -1,0 +1,177 @@
+---
+// AJUSTAR: substituir por depoimentos reais autorizados pelos alunos/responsáveis
+const testimonials = [
+  {
+    quote:
+      'Minha filha era tímida e hoje pinta em casa com uma alegria contagiante. A Tia Kaka tem uma paciência que não é deste mundo.',
+    author: 'Mariana R.',
+    role: 'Mãe da Alice, 7 anos',
+  },
+  {
+    quote:
+      'Cheguei dizendo que não sabia desenhar nem uma bolinha. Três meses depois, estava montando o primeiro quadro para a sala.',
+    author: 'José L.',
+    role: 'Aluno adulto (pintura em tela)',
+  },
+  {
+    quote:
+      'A arteterapia com a Klara mudou o jeito como minhas meninas lidam com frustração. É muito mais do que aula de arte.',
+    author: 'Fernanda C.',
+    role: 'Mãe de gêmeas de 5 anos',
+  },
+  {
+    quote:
+      'Achei que seria só um hobby. Hoje, quatro anos depois, vendo meus panos de prato em feiras. A Kaka abriu esse caminho.',
+    author: 'Dona Zuleide',
+    role: 'Aluna há 4 anos',
+  },
+];
+---
+
+<section id="depoimentos" class="section relative overflow-hidden" style="background: var(--color-cream);">
+  <div class="container-wide">
+    <div class="max-w-2xl mb-10">
+      <p class="section-kicker">O que dizem</p>
+      <h2 class="section-title text-balance">
+        Alunos que
+        <span class="brush-underline italic" style="color: var(--color-terracota);">contam</span>
+        a história
+      </h2>
+    </div>
+
+    <div class="relative">
+      <div
+        id="testimonials-track"
+        class="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-4 -mx-5 px-5 no-scrollbar"
+        aria-label="Carrossel de depoimentos"
+        tabindex="0"
+      >
+        {testimonials.map((t, i) => (
+          <article
+            class="testimonial-card snap-center shrink-0 w-[85%] sm:w-[55%] lg:w-[42%] glass-card p-7 md:p-9 flex flex-col"
+            data-index={i}
+          >
+            <svg
+              width="44"
+              height="44"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="mb-4 shrink-0"
+              style="color: var(--color-terracota); opacity: 0.35;"
+              aria-hidden="true"
+            >
+              <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
+            </svg>
+            <blockquote class="font-display text-xl md:text-2xl leading-snug mb-6 flex-1" style="color: var(--color-tinta);">
+              "{t.quote}"
+            </blockquote>
+            <footer class="flex items-center gap-3 mt-auto">
+              <div
+                class="w-12 h-12 rounded-full grid place-items-center font-display font-bold text-lg shrink-0"
+                style="background: var(--color-terracota); color: var(--color-cream);"
+                aria-hidden="true"
+              >
+                {t.author.charAt(0)}
+              </div>
+              <div>
+                <p class="font-bold" style="color: var(--color-tinta);">{t.author}</p>
+                <p class="text-sm" style="color: rgba(44,36,22,0.65);">{t.role}</p>
+              </div>
+            </footer>
+          </article>
+        ))}
+      </div>
+
+      <div class="flex items-center justify-center gap-3 mt-6" role="tablist" aria-label="Navegar depoimentos">
+        {testimonials.map((_, i) => (
+          <button
+            type="button"
+            class="testimonial-dot w-2.5 h-2.5 rounded-full transition-all duration-300"
+            data-dot={i}
+            aria-label={`Ir para depoimento ${i + 1}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+          ></button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .testimonial-dot {
+    background: rgba(44,36,22,0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .testimonial-dot[aria-selected="true"] {
+    background: var(--color-terracota);
+    width: 28px;
+    border-radius: 999px;
+  }
+</style>
+
+<script>
+  const track = document.getElementById('testimonials-track') as HTMLElement;
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.testimonial-card'));
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.testimonial-dot'));
+  if (!track) throw new Error('Testimonials track missing');
+
+  let autoplayTimer: number | undefined;
+  let isHovered = false;
+  let currentIndex = 0;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function scrollToIndex(idx: number) {
+    const target = cards[idx];
+    if (!target) return;
+    const offsetLeft = target.offsetLeft - track.offsetLeft;
+    track.scrollTo({ left: offsetLeft - 20, behavior: reduceMotion ? 'auto' : 'smooth' });
+    currentIndex = idx;
+    dots.forEach((d, i) => d.setAttribute('aria-selected', i === idx ? 'true' : 'false'));
+  }
+
+  dots.forEach((dot, i) => dot.addEventListener('click', () => scrollToIndex(i)));
+
+  // Sincroniza o dot ao scroll manual
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const idx = cards.indexOf(entry.target as HTMLElement);
+          if (idx >= 0) {
+            currentIndex = idx;
+            dots.forEach((d, i) => d.setAttribute('aria-selected', i === idx ? 'true' : 'false'));
+          }
+        }
+      });
+    },
+    { root: track, threshold: 0.6 },
+  );
+  cards.forEach((c) => io.observe(c));
+
+  function tick() {
+    if (isHovered || reduceMotion) return;
+    const next = (currentIndex + 1) % cards.length;
+    scrollToIndex(next);
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    if (reduceMotion) return;
+    autoplayTimer = window.setInterval(tick, 5500);
+  }
+  function stopAutoplay() {
+    if (autoplayTimer !== undefined) clearInterval(autoplayTimer);
+  }
+
+  track.addEventListener('mouseenter', () => { isHovered = true; });
+  track.addEventListener('mouseleave', () => { isHovered = false; });
+  track.addEventListener('focusin', () => { isHovered = true; });
+  track.addEventListener('focusout', () => { isHovered = false; });
+
+  startAutoplay();
+</script>

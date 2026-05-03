@@ -1,0 +1,103 @@
+---
+---
+
+<div
+  id="custom-cursor"
+  class="pointer-events-none"
+  aria-hidden="true"
+>
+  <svg width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g transform="rotate(-30 20 20)">
+      <rect x="17" y="3" width="6" height="16" rx="1.8" fill="#2C2416" />
+      <rect x="16.5" y="18" width="7" height="4" rx="1" fill="#D9A441" stroke="#2C2416" stroke-width="0.8" />
+      <path d="M14.5 21 L 25.5 21 L 23.5 34 Q 20 37 16.5 34 Z" fill="#C1694F" stroke="#2C2416" stroke-width="0.8" stroke-linejoin="round" />
+      <circle cx="17.5" cy="33" r="0.9" fill="#A35741" opacity="0.7" />
+      <circle cx="22" cy="34" r="0.7" fill="#A35741" opacity="0.7" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  #custom-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 34px;
+    height: 34px;
+    z-index: 9999;
+    transform: translate(-9999px, -9999px);
+    transition: opacity 0.3s ease;
+    will-change: transform;
+    display: none;
+  }
+
+  @media (pointer: fine) {
+    #custom-cursor {
+      display: block;
+    }
+    html.cursor-enabled,
+    html.cursor-enabled body,
+    html.cursor-enabled a,
+    html.cursor-enabled button,
+    html.cursor-enabled [role="button"],
+    html.cursor-enabled input,
+    html.cursor-enabled textarea,
+    html.cursor-enabled select {
+      cursor: none !important;
+    }
+  }
+
+  #custom-cursor.cursor-hover svg {
+    transform: scale(1.4) rotate(-8deg);
+    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1);
+  }
+  #custom-cursor svg {
+    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1);
+    filter: drop-shadow(0 4px 8px rgba(44,36,22,0.3));
+  }
+</style>
+
+<script>
+  const cursor = document.getElementById('custom-cursor') as HTMLElement | null;
+  if (cursor && window.matchMedia('(pointer: fine)').matches) {
+    document.documentElement.classList.add('cursor-enabled');
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let tx = -100, ty = -100;
+    let cx = -100, cy = -100;
+
+    const onMove = (e: MouseEvent) => {
+      tx = e.clientX;
+      ty = e.clientY;
+      if (reduceMotion) {
+        cx = tx; cy = ty;
+        cursor.style.transform = `translate(${cx - 17}px, ${cy - 17}px)`;
+      }
+    };
+    document.addEventListener('mousemove', onMove, { passive: true });
+
+    if (!reduceMotion) {
+      const loop = () => {
+        cx += (tx - cx) * 0.18;
+        cy += (ty - cy) * 0.18;
+        cursor.style.transform = `translate(${cx - 17}px, ${cy - 17}px)`;
+        requestAnimationFrame(loop);
+      };
+      loop();
+    }
+
+    const hoverables = 'a, button, [role="button"], input, textarea, select, summary, [data-faq] summary';
+    document.querySelectorAll<HTMLElement>(hoverables).forEach((el) => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+    });
+
+    document.addEventListener('mouseleave', () => {
+      cursor.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+      cursor.style.opacity = '1';
+    });
+  }
+</script>

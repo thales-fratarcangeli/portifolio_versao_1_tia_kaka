@@ -1,0 +1,350 @@
+
+
+---
+
+```
+## Prompt Acessório — Features Adicionais
+## Site: Tia Kaka | Klara Bosso
+## Stack: Astro 4.x + Tailwind CSS + Motion One
+## Contexto: adicionar ao projeto base já existente, sem quebrar nenhum
+## componente anterior. Todas as features são 100% estáticas (sem API externa).
+
+---
+
+## 1. Galeria Filtrável com Animações
+
+Arquivo: `src/components/Gallery.astro`
+
+- Criar array de objetos no frontmatter do componente:
+  ```js
+  const items = [
+    { id: 1, category: 'telas', src: '/images/gallery/placeholder-1.jpg', alt: 'Descrição da obra' },
+    { id: 2, category: 'panos', src: '/images/gallery/placeholder-2.jpg', alt: 'Descrição da obra' },
+    { id: 3, category: 'alunos', src: '/images/gallery/placeholder-3.jpg', alt: 'Descrição da obra' },
+    // repetir até 12 itens com as 3 categorias distribuídas
+  ]
+  ```
+- Categorias: `'telas'` | `'panos'` | `'alunos'`
+- Botões de filtro estilizados como pílulas (pill buttons) com cor
+  `--color-terracota` quando ativo
+- Filtro em JS vanilla: toggle classe `hidden` + animação de fade+scale
+  via Motion One `animate(el, { opacity: [0,1], scale: [0.9,1] }, { duration: 0.3 })`
+- Layout: CSS Masonry com `columns: 2` (mobile) e `columns: 3` (lg+)
+- **Lightbox vanilla**: ao clicar em qualquer imagem, abrir overlay fullscreen
+  com a imagem ampliada, botão de fechar (ESC também fecha), setas
+  prev/next navegando pelo array filtrado atual
+- Lazy loading: `loading="lazy"` + `decoding="async"` em todas as `<img>`
+- **Placeholders**: usar `<img src="/images/gallery/placeholder-N.jpg">` com
+  comentário `{/* SUBSTITUIR: adicionar imagem real aqui */}` em cada item.
+  Gerar retângulos coloridos como placeholder via CSS
+  `background: var(--color-areia)` com aspect-ratio 4/3 ou 3/4 alternados
+  para simular masonry real.
+
+---
+
+## 2. Before/After Deslizante ("Processo Criativo")
+
+Arquivo: `src/components/BeforeAfter.astro`
+
+- Seção com headline "Do branco à obra" + subtítulo curto
+- Componente slider de comparação implementado com:
+  - Container `position: relative; overflow: hidden`
+  - Duas imagens absolutas sobrepostas (before embaixo, after em cima)
+  - Clip-path na imagem "after": `clip-path: inset(0 {100-pos}% 0 0)`
+    onde `pos` é o percentual controlado pelo drag
+  - Handle central: círculo com ícone de setas ↔ (SVG inline Lucide `ArrowLeftRight`)
+  - Interação: `mousedown` + `mousemove` + `mouseup` e equivalentes touch
+    (`touchstart`, `touchmove`, `touchend`) para mobile
+  - Inicializar com handle em 50%
+- **Placeholders**:
+  ```html
+  <!-- SUBSTITUIR: imagem ANTES (tela em branco / esboço inicial) -->
+  <img src="/images/before-placeholder.jpg" alt="Antes: tela em branco" />
+  <!-- SUBSTITUIR: imagem DEPOIS (obra finalizada) -->
+  <img src="/images/after-placeholder.jpg" alt="Depois: obra concluída" />
+  ```
+  Usar divs coloridos como placeholder enquanto não há imagens reais.
+- Adicionar `aria-label="Comparador antes e depois"` no container
+  e `role="img"` para acessibilidade
+
+---
+
+## 3. Contador Animado de Conquistas
+
+Arquivo: `src/components/Stats.astro`
+
+- 4 contadores dispostos em grid 2×2 (mobile) e 4×1 (lg+):
+  | Número | Label |
+  |--------|-------|
+  | 8+ | Anos ensinando |
+  | 200+ | Alunos formados |
+  | 4 | Modalidades de arte |
+  | 100% | Aulas personalizadas |
+- Implementação da animação:
+  ```js
+  // IntersectionObserver dispara ao entrar 20% na viewport
+  // easing: easeOutCubic manual
+  // duration: 2000ms
+  // usar requestAnimationFrame para suavidade
+  function animateCounter(el, target, duration = 2000) {
+    const start = performance.now();
+    const update = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+      el.textContent = Math.floor(ease * target) + (el.dataset.suffix || '');
+      if (progress < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+  ```
+- Cada elemento `<span>` deve ter `data-target="200"` e `data-suffix="+"`
+- `prefers-reduced-motion`: se ativo, mostrar valor final direto sem animação
+- Fundo da seção: textura SVG noise sutil sobre `--color-terracota`
+  com texto em branco/creme
+
+---
+
+## 4. Calendário de Turmas
+
+Arquivo: `src/components/Schedule.astro`
+
+- Dados hardcoded no frontmatter como array de objetos:
+  ```js
+  const schedule = [
+    { day: 'Segunda', time: '09h – 11h', activity: 'Pintura em Tela', ages: 'Adultos', spots: 'Vagas disponíveis' },
+    { day: 'Terça',   time: '14h – 16h', activity: 'Arteterapia',    ages: 'Crianças (4–10)', spots: 'Últimas vagas' },
+    { day: 'Quarta',  time: '09h – 11h', activity: 'Desenho',         ages: 'Todas as idades', spots: 'Vagas disponíveis' },
+    { day: 'Quinta',  time: '19h – 21h', activity: 'Panos de Prato',  ages: 'Adultos',         spots: 'Vagas disponíveis' },
+    { day: 'Sábado',  time: '09h – 12h', activity: 'Turma Livre',     ages: 'Todas as idades', spots: 'Esgotado' },
+  ]
+  ```
+  Adicionar comentário `{/* AJUSTAR: atualizar horários e disponibilidade reais */}`
+- Renderizar como tabela estilizada (não usar `<table>` nua — usar grid CSS)
+  com linhas alternadas em `--color-areia`
+- Badge de status colorido por disponibilidade:
+  - "Vagas disponíveis" → verde-oliva
+  - "Últimas vagas" → amarelo-ocre
+  - "Esgotado" → terracota
+- CTA ao final: botão WhatsApp "Reservar minha vaga"
+  → `https://wa.me/5516991468916?text=Olá%20Tia%20Kaka%2C%20quero%20reservar%20uma%20vaga!`
+
+---
+
+## 5. FAQ em Accordion
+
+Arquivo: `src/components/FAQ.astro`
+
+- Perguntas hardcoded:
+  ```js
+  const faqs = [
+    { q: 'Preciso ter experiência para começar?', a: 'Não! As aulas são adaptadas para todos os níveis, do iniciante ao avançado.' },
+    { q: 'Qual a faixa etária atendida?', a: 'Atendemos desde crianças a partir de 4 anos até adultos de qualquer idade.' },
+    { q: 'Como funcionam as aulas de arteterapia?', a: 'As sessões combinam técnicas artísticas com abordagem lúdica para desenvolver criatividade, foco e equilíbrio emocional nas crianças.' },
+    { q: 'Preciso levar material?', a: 'Todo o material é fornecido durante as aulas. Para alunos que quiserem praticar em casa, indicamos uma lista básica.' },
+    { q: 'As aulas são individuais ou em grupo?', a: 'Trabalhamos em pequenos grupos para garantir atenção personalizada. Aulas individuais podem ser agendadas sob consulta.' },
+    { q: 'Como faço para me matricular?', a: 'É só entrar em contato pelo WhatsApp! Faremos uma conversa rápida para entender seu interesse e indicar a melhor turma.' },
+  ]
+  ```
+- Accordion CSS-only via `<details>` + `<summary>` nativos (sem JS obrigatório)
+  com `::marker` customizado substituído por ícone `+` / `×` via CSS
+- Animação de abertura: `max-height` transition em JS (adicionar classe ao abrir)
+  para suavizar já que `<details>` não anima nativamente
+- Apenas um item aberto por vez (fechar os demais via JS ao abrir novo)
+- Acessibilidade: `<details>`/`<summary>` são nativamente acessíveis,
+  mas adicionar `aria-expanded` via JS para compatibilidade máxima
+
+---
+
+## 6. CTAs de WhatsApp Pré-preenchidos por Serviço
+
+Atualizar `src/components/Services.astro`
+
+- Cada card de serviço deve ter seu próprio botão com mensagem contextual:
+  ```js
+  const services = [
+    {
+      title: 'Pintura em Tela',
+      waMessage: 'Olá%20Tia%20Kaka%2C%20tenho%20interesse%20nas%20aulas%20de%20Pintura%20em%20Tela!',
+    },
+    {
+      title: 'Desenho Artístico',
+      waMessage: 'Olá%20Tia%20Kaka%2C%20tenho%20interesse%20nas%20aulas%20de%20Desenho!',
+    },
+    {
+      title: 'Panos de Prato',
+      waMessage: 'Olá%20Tia%20Kaka%2C%20tenho%20interesse%20nas%20aulas%20de%20Panos%20de%20Prato!',
+    },
+    {
+      title: 'Arteterapia Infantil',
+      waMessage: 'Olá%20Tia%20Kaka%2C%20tenho%20interesse%20na%20Arteterapia%20Infantil!',
+    },
+  ]
+  ```
+- Link final: `https://wa.me/5516991468916?text=${service.waMessage}`
+- Botão estilizado com ícone do WhatsApp (SVG inline, não biblioteca)
+  em verde `#25D366` com hover mais escuro
+
+---
+
+## 7. Cursor Customizado de Pincel
+
+Arquivo: `src/components/CustomCursor.astro` (importar no BaseLayout)
+
+- Visível apenas em `@media (pointer: fine)` — desabilitar em touch/mobile
+- Implementação:
+  - `<div id="cursor">` com SVG de pincel (criar SVG simples de pincel inclinado
+    ~30px, ponta apontando para baixo-esquerda)
+  - `position: fixed; pointer-events: none; z-index: 9999`
+  - Seguir mouse com pequeno lag (lerp):
+    ```js
+    let cx = 0, cy = 0, tx = 0, ty = 0;
+    document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+    const loop = () => {
+      cx += (tx - cx) * 0.15;
+      cy += (ty - cy) * 0.15;
+      cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+      requestAnimationFrame(loop);
+    };
+    loop();
+    ```
+  - Escalar levemente (`scale(1.4)`) ao hover em links e botões
+    via `mouseenter`/`mouseleave` nos elementos interativos
+  - Ocultar cursor nativo: `cursor: none` no `body` (apenas quando
+    `pointer: fine` detectado via JS para não quebrar touch)
+  - `prefers-reduced-motion`: se ativo, remover o lag e mover instantaneamente
+
+---
+
+## 8. Linha do Tempo de Reconhecimentos
+
+Arquivo: `src/components/Timeline.astro`
+
+- Dados hardcoded com comentário para editar:
+  ```js
+  // AJUSTAR: preencher com eventos, exposições e marcos reais
+  const events = [
+    { year: '2017', title: 'Início das aulas', description: 'Primeiras turmas em São Joaquim da Barra' },
+    { year: '2019', title: 'Expansão para arteterapia', description: 'Início das sessões terapêuticas para crianças' },
+    { year: '2021', title: '100 alunos formados', description: 'Marco de centenas de vidas tocadas pela arte' },
+    { year: '2023', title: 'Novas modalidades', description: 'Introdução das aulas de panos de prato decorativos' },
+    { year: '2025', title: 'Site no ar!', description: 'Borboletas em Desenvolvimento ganha presença digital' },
+  ]
+  ```
+- Layout: linha vertical central com eventos alternados esquerda/direita (desktop)
+  e linha lateral esquerda com eventos à direita (mobile)
+- Linha: `border-left: 2px solid var(--color-terracota)` (mobile) /
+  `border` central absoluta (desktop)
+- Dot: círculo preenchido `--color-terracota` em cada evento
+- Animação: cada evento faz `slideInLeft`/`slideInRight` via IntersectionObserver
+  + Motion One quando entra na viewport
+
+---
+
+## 9. Blog Estático com Markdown
+
+Arquivos novos:
+```
+src/
+├── content/
+│   └── blog/
+│       ├── como-comecar-pintura-em-tela.md   ← placeholder
+│       ├── beneficios-arteterapia-criancas.md ← placeholder
+│       └── tecnicas-pintura-panos-prato.md    ← placeholder
+└── pages/
+    ├── blog/
+    │   ├── index.astro   ← listagem
+    │   └── [...slug].astro ← post individual
+```
+
+- Configurar Content Collections no `src/content/config.ts`:
+  ```ts
+  import { defineCollection, z } from 'astro:content';
+  export const collections = {
+    blog: defineCollection({
+      schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        pubDate: z.date(),
+        coverImage: z.string().optional(), // SUBSTITUIR: path da imagem
+        category: z.enum(['pintura', 'arteterapia', 'tecnicas']),
+      }),
+    }),
+  };
+  ```
+- Cada `.md` de placeholder deve ter frontmatter preenchido e corpo com
+  `<!-- SUBSTITUIR: adicionar conteúdo real do post aqui -->` + 3 parágrafos
+  genéricos de exemplo para visualizar o layout
+- Página de listagem: grid de cards com cover, título, data, categoria e
+  link para leitura completa
+- Página de post: layout editorial com tipografia grande, max-width 65ch,
+  navegação prev/next entre posts
+- Adicionar link "Blog" no nav principal e no footer
+
+---
+
+## 10. Google Maps Iframe (sem API key)
+
+Atualizar `src/components/Contact.astro`
+
+- Embed simples sem necessidade de chave:
+  ```html
+  <iframe
+    src="https://maps.google.com/maps?q=Rua+Rio+Grande+do+Norte,+1619,+São+Joaquim+da+Barra,+SP&output=embed"
+    width="100%"
+    height="400"
+    style="border:0; border-radius: 16px;"
+    allowfullscreen
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title="Localização da Tia Kaka"
+    aria-label="Mapa mostrando a localização do ateliê"
+  ></iframe>
+  ```
+- Container com `border-radius` e `box-shadow` para integrar ao design
+- Fallback visível se iframe bloquear: card com endereço completo +
+  link "Abrir no Google Maps" apontando para
+  `https://maps.google.com/?q=Rua+Rio+Grande+do+Norte,1619,São+Joaquim+da+Barra`
+
+---
+
+## Placeholders de Imagens — Resumo Completo
+
+Todas as imagens devem ter comentário padrão e fallback visual em CSS:
+
+| Caminho | Uso | Dimensão sugerida |
+|---|---|---|
+| `/images/hero-bg.jpg` | Fundo do Hero | 1920×1080 |
+| `/images/klara-profile.jpg` | Foto da Klara no About | 600×800 |
+| `/images/before-placeholder.jpg` | Before/After — antes | 800×600 |
+| `/images/after-placeholder.jpg` | Before/After — depois | 800×600 |
+| `/images/gallery/placeholder-1.jpg` até `placeholder-12.jpg` | Galeria | variado |
+| `/images/blog/post-1-cover.jpg` até `post-3-cover.jpg` | Covers do Blog | 1200×630 |
+
+Para cada `<img>` sem arquivo real ainda, usar:
+```html
+<!-- SUBSTITUIR: [descrição do que a imagem deve mostrar] -->
+<div class="img-placeholder" aria-hidden="true"
+  style="background: var(--color-areia); aspect-ratio: 4/3;
+         display:flex; align-items:center; justify-content:center;
+         color: var(--color-tinta); opacity: 0.4; font-size: 0.8rem;">
+  📷 [nome do arquivo]
+</div>
+```
+
+---
+
+## Ordem de Implementação Sugerida
+
+1. Stats (contador) — mais rápido, impacto visual imediato
+2. FAQ — resolve dúvidas antes do contato, alto valor prático
+3. CTAs de WhatsApp — melhora conversão dos cards já existentes
+4. Calendário de Turmas — informação crítica para novos alunos
+5. Galeria filtrável + Lightbox — aprimora seção já existente
+6. Before/After — seção nova de alto impacto
+7. Cursor customizado — detalhe memorável
+8. Timeline — conteúdo editorial, preencher depois com dados reais
+9. Blog — conteúdo de longo prazo, iniciar com posts placeholder
+10. Google Maps — atualizar seção de contato já existente
+```
+
+no final, upe no meu github em https://github.com/thales-fratarcangeli/portifolio_versao_1_tia_kaka.git

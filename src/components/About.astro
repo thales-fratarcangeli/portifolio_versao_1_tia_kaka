@@ -1,0 +1,127 @@
+---
+const pills = [
+  'Pintura em Tela',
+  'Panos de Prato',
+  'Arteterapia Infantil',
+  'Desenho Artístico',
+];
+
+const highlights = [
+  {
+    label: '+8 anos',
+    description: 'ensinando arte com paixão',
+    icon: 'clock',
+  },
+  {
+    label: '4 a 80+',
+    description: 'faixas etárias atendidas',
+    icon: 'users',
+  },
+  {
+    label: '4 modalidades',
+    description: 'pintura, desenho, panos e arteterapia',
+    icon: 'palette',
+  },
+];
+---
+
+<section id="sobre" class="section">
+  <div class="container-wide grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+    <div class="lg:col-span-5 relative order-2 lg:order-1">
+      <div class="relative w-full aspect-[3/4] max-w-sm mx-auto">
+        <div
+          class="absolute inset-0 rotate-[4deg]"
+          style="background: var(--color-verde-oliva); border-radius: 60% 40% 55% 45% / 40% 60% 40% 60%; opacity: .28;"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="absolute inset-3 -rotate-[2deg] overflow-hidden"
+          style="background: var(--color-areia); border-radius: 45% 55% 40% 60% / 55% 40% 60% 45%;"
+        >
+          <!-- SUBSTITUIR: foto da Klara segurando pincel em ambiente de ateliê -->
+          <div class="img-placeholder w-full h-full" style="border-radius: inherit;">
+            <div class="text-center px-6">
+              <p style="font-size:.75rem; opacity:.7;">SUBSTITUIR · Foto da Klara</p>
+              <p style="font-size:.65rem; opacity:.4;">/images/klara-profile.jpg</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Etiqueta assinada -->
+        <div
+          class="absolute -bottom-3 -right-3 px-4 py-2 rotate-[-5deg] font-display italic shadow-organic"
+          style="background: var(--color-cream); color: var(--color-terracota); border-radius: 12px 6px 14px 4px; border: 1.5px dashed var(--color-terracota);"
+        >
+          <span class="text-xs font-bold uppercase tracking-widest">assinado</span>
+          <br/>
+          <span class="text-lg">Klara Bosso</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-7 order-1 lg:order-2">
+      <p class="section-kicker">Quem é a Tia Kaka</p>
+      <h2 class="section-title text-balance">
+        Uma vida inteira
+        <span class="brush-underline italic" style="color: var(--color-terracota);">pintada</span>
+        com afeto
+      </h2>
+
+      <div class="space-y-5 text-lg leading-relaxed mt-6" style="color: rgba(44,36,22,0.85);">
+        <p>
+          Klara Bosso — a <strong style="color: var(--color-tinta);">Tia Kaka</strong> — é professora
+          de artes plásticas em São Joaquim da Barra há mais de oito anos. Seu ateliê, chamado carinhosamente
+          de <em>"Borboletas em Desenvolvimento"</em>, nasceu do desejo simples de abrir espaço para que pessoas
+          de todas as idades encontrassem na arte um refúgio e uma linguagem.
+        </p>
+        <p>
+          Pintura em tela, desenho, panos de prato decorativos e arteterapia infantil são os caminhos
+          pelos quais ela conduz cada aluno — do pequeno de 4 anos que ainda aprende a segurar o pincel
+          ao adulto que sempre sonhou em pintar mas achava que "não levava jeito".
+        </p>
+        <p class="font-display italic text-xl" style="color: var(--color-terracota);">
+          "Ninguém começa sabendo. Todo mundo começa sentindo."
+        </p>
+      </div>
+
+      <div class="mt-10 grid sm:grid-cols-3 gap-4">
+        {highlights.map((h) => (
+          <div class="glass-card p-5">
+            <div
+              class="w-11 h-11 rounded-full grid place-items-center mb-3"
+              style="background: rgba(193, 105, 79, 0.12); color: var(--color-terracota);"
+              aria-hidden="true"
+            >
+              {h.icon === 'clock' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                </svg>
+              )}
+              {h.icon === 'users' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              )}
+              {h.icon === 'palette' && (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.8 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.5-1-.3-.3-.5-.7-.5-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-5-4.5-9-10-9z"/>
+                </svg>
+              )}
+            </div>
+            <p class="font-display text-2xl font-bold" style="color: var(--color-tinta);">{h.label}</p>
+            <p class="text-sm mt-1" style="color: rgba(44,36,22,0.7);">{h.description}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-2">
+        {pills.map((pill) => (
+          <span class="pill">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color: var(--color-terracota);"><circle cx="12" cy="12" r="6"/></svg>
+            {pill}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

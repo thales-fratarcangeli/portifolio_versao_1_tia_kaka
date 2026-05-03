@@ -1,0 +1,128 @@
+---
+const faqs = [
+  { q: 'Preciso ter experiência para começar?',  a: 'Não! As aulas são adaptadas para todos os níveis, do iniciante absoluto ao avançado. Cada pessoa evolui no seu ritmo — o importante é querer experimentar.' },
+  { q: 'Qual a faixa etária atendida?',            a: 'Atendemos desde crianças a partir de 4 anos até adultos de qualquer idade. Existem turmas específicas para cada faixa, mas também fazemos turmas mistas quando faz sentido.' },
+  { q: 'Como funcionam as aulas de arteterapia?',  a: 'As sessões combinam técnicas artísticas com abordagem lúdica para desenvolver criatividade, foco e equilíbrio emocional nas crianças. Não é aula de arte comum — é um espaço seguro para se expressar.' },
+  { q: 'Preciso levar material?',                  a: 'Todo o material básico é fornecido durante as aulas. Para alunos que quiserem praticar em casa, indicamos uma lista de kits simples e acessíveis.' },
+  { q: 'As aulas são individuais ou em grupo?',    a: 'Trabalhamos em pequenos grupos para garantir atenção personalizada a cada aluno. Aulas individuais podem ser agendadas sob consulta.' },
+  { q: 'Como faço para me matricular?',             a: 'É só entrar em contato pelo WhatsApp! Faremos uma conversa rápida para entender seu interesse, disponibilidade e indicar a melhor turma para você.' },
+];
+---
+
+<section id="faq" class="section" style="background: var(--color-cream);">
+  <div class="container-wide max-w-4xl">
+    <div class="text-center mb-12 max-w-2xl mx-auto">
+      <p class="section-kicker">Perguntas frequentes</p>
+      <h2 class="section-title text-balance">
+        Dúvidas
+        <span class="brush-underline italic" style="color: var(--color-terracota);">comuns</span>
+      </h2>
+      <p class="section-lead mt-4 mx-auto">
+        Se a sua pergunta não está aqui, me chama no WhatsApp — respondo pessoalmente.
+      </p>
+    </div>
+
+    <div class="space-y-3" id="faq-list">
+      {faqs.map((item, i) => (
+        <details
+          class="faq-item glass-card overflow-hidden"
+          name="klara-faq"
+          data-faq
+        >
+          <summary
+            class="faq-summary flex items-center justify-between gap-4 px-6 py-5 cursor-pointer font-display font-bold text-lg md:text-xl"
+            style="color: var(--color-tinta);"
+            aria-expanded="false"
+          >
+            <span class="flex-1">{item.q}</span>
+            <span
+              class="faq-icon w-10 h-10 rounded-full grid place-items-center shrink-0 transition-transform duration-300"
+              style="background: var(--color-areia); color: var(--color-terracota);"
+              aria-hidden="true"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-answer px-6 pb-6 text-base md:text-lg leading-relaxed" style="color: rgba(44,36,22,0.8);">
+            {item.a}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-item {
+    border-radius: 20px 16px 24px 18px / 18px 22px 18px 22px !important;
+  }
+  .faq-summary {
+    list-style: none;
+  }
+  .faq-summary::-webkit-details-marker { display: none; }
+  .faq-summary::marker { content: ''; }
+
+  details[open] .faq-icon {
+    transform: rotate(45deg);
+    background: var(--color-terracota);
+    color: var(--color-cream);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: max-height 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease, padding 0.3s ease;
+  }
+  details[open] .faq-answer {
+    max-height: var(--faq-h, 400px);
+    opacity: 1;
+    padding-bottom: 1.5rem;
+  }
+</style>
+
+<script>
+  const items = document.querySelectorAll<HTMLDetailsElement>('[data-faq]');
+
+  function measure(item: HTMLDetailsElement) {
+    const answer = item.querySelector<HTMLElement>('.faq-answer');
+    if (!answer) return;
+    // Força medida temporária
+    const prev = answer.style.maxHeight;
+    answer.style.transition = 'none';
+    answer.style.maxHeight = 'none';
+    const h = answer.scrollHeight;
+    answer.style.maxHeight = prev;
+    answer.style.transition = '';
+    item.style.setProperty('--faq-h', `${h + 24}px`);
+  }
+
+  items.forEach((item) => {
+    measure(item);
+
+    const summary = item.querySelector<HTMLElement>('.faq-summary');
+    summary?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isOpen = item.open;
+      // Fechar todos os outros
+      items.forEach((other) => {
+        if (other !== item && other.open) {
+          other.open = false;
+          other.querySelector('.faq-summary')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+      // Toggle atual
+      item.open = !isOpen;
+      summary.setAttribute('aria-expanded', String(!isOpen));
+      if (!isOpen) measure(item);
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    items.forEach((it) => measure(it));
+  });
+</script>
